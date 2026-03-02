@@ -112,3 +112,5 @@ backups/
 
 # PlantUML
 /out/*
+
+/docs/ap/*

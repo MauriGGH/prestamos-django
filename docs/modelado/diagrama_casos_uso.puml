@@ -12,39 +12,39 @@ actor "Consultor de Reportes" as Consultor #LightPink
 rectangle "Sistema de Gestión de Préstamos" {
   
   package "Gestión de Catálogos" #DDDDDD {
-    usecase "RF-A: Listar Puestos" as UC_A
-    usecase "RF-B: Agregar Puesto" as UC_B
-    usecase "RF-C: Listar Empleados" as UC_C
-    usecase "RF-D: Agregar Empleado" as UC_D
-    usecase "RF-I: Modificar Empleado" as UC_I
+    usecase "RF: Listar Puestos" as UC_A
+    usecase "RF: Agregar Puesto" as UC_B
+    usecase "RF: Listar Empleados" as UC_C
+    usecase "RF: Agregar Empleado" as UC_D
+    usecase "RF: Modificar Empleado" as UC_I
   }
   
   package "Gestión de Historial" #E8F4F8 {
-    usecase "RF-E: Ver Historial de Puestos" as UC_E
-    usecase "RF-F: Cambiar Puesto Empleado" as UC_F
-    usecase "RF-G: Ver Historial de Préstamos" as UC_G
+    usecase "RF: Ver Historial de Puestos" as UC_E
+    usecase "RF: Cambiar Puesto Empleado" as UC_F
+    usecase "RF: Ver Historial de Préstamos" as UC_G
   }
   
   package "Gestión de Préstamos" #F0F8E8 {
-    usecase "RF-K: Solicitar/Agregar Préstamo" as UC_K
-    usecase "RF-H: Ver Detalles de Préstamo" as UC_H
-    usecase "RF-J: Listar Todos los Préstamos" as UC_J
-    usecase "RF-M: Listar Préstamos Detallados" as UC_M
+    usecase "RF: Solicitar/Agregar Préstamo" as UC_K
+    usecase "RF: Ver Detalles de Préstamo" as UC_H
+    usecase "RF: Listar Todos los Préstamos" as UC_J
+    usecase "RF: Listar Préstamos Detallados" as UC_M
     usecase "Validar Requisitos" as UC_ValidarReq
     usecase "Calcular Monto Máximo" as UC_CalcMonto
     usecase "Aprobar/Rechazar Préstamo" as UC_Aprobar
   }
   
   package "Gestión de Abonos" #FFF8E8 {
-    usecase "RF-L: Registrar Abono" as UC_L
+    usecase "RF: Registrar Abono" as UC_L
     usecase "Calcular Interés" as UC_CalcInteres
     usecase "Actualizar Saldo" as UC_ActSaldo
   }
   
   package "Reportes y Consultas" #F8E8F0 {
-    usecase "RF-N: Reporte de Préstamo" as UC_N
-    usecase "RF-O: Historial Préstamos Empleado" as UC_O
-    usecase "RF-P: Préstamos Activos por Fecha" as UC_P
+    usecase "RF: Reporte de Préstamo" as UC_N
+    usecase "RF: Historial Préstamos Empleado" as UC_O
+    usecase "RF: Préstamos Activos por Fecha" as UC_P
   }
 }
 
