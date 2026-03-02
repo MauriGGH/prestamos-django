@@ -256,15 +256,6 @@ Para el taller de Django, estaremos utilizando Docker para:
 
 No es necesario instalar PostgreSQL, Python o Django directamente en tu sistema. Todo se ejecutará dentro de contenedores Docker.
 
-### Próximos Pasos
-
-En las siguientes guías del taller aprenderás a:
-
-- Crear un archivo `Dockerfile` para tu aplicación Django
-- Configurar `docker-compose.yml` para orquestar múltiples servicios
-- Conectar Django con PostgreSQL usando Docker
-- Desarrollar y probar tu aplicación web
-
 ---
 
 ## Solución de Problemas Comunes
@@ -320,6 +311,5 @@ Si encuentras problemas durante la instalación que no se cubren en esta guía:
 
 1. Consulta la [documentación oficial de Docker](https://docs.docker.com/get-docker/)
 2. Revisa los [foros de la comunidad Docker](https://forums.docker.com/)
-3. Contacta al instructor del taller
 
 ---

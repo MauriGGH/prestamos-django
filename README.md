@@ -311,17 +311,6 @@ aplicacion_prestamos/
     └── base.html
 ```
 
-
-## 📝 Contribuir al Taller
-
-Este proyecto es parte de un taller educativo. Las contribuciones son bienvenidas:
-
-1. Fork del repositorio
-2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit de cambios (`git commit -am 'Agregar funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crear Pull Request
-
 ## 📖 Recursos Adicionales
 
 ### Documentación Oficial
