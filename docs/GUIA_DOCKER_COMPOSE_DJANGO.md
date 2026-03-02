@@ -128,6 +128,8 @@ djangorestframework==3.14.0
 # Herramientas de desarrollo
 django-debug-toolbar==4.3.0
 
+dj-database-url==2.1.0
+
 # Manejo de archivos estáticos en producción (opcional)
 whitenoise==6.6.0
 ```
