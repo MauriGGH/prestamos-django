@@ -1,0 +1,51 @@
+from django.contrib import admin
+from apps.empleados.models import Puesto, Empleado, HistorialPuesto
+
+@admin.register(Puesto)
+class PuestoAdmin(admin.ModelAdmin):
+    list_display = ['nombre', 'sueldo']
+    search_fields = ['nombre']
+    ordering = ['-sueldo']
+    list_per_page = 20
+
+@admin.register(Empleado)
+class EmpleadoAdmin(admin.ModelAdmin):
+    list_display = ['nombre', 'fecha_ingreso', 'activo', 'antiguedad_años']
+    search_fields = ['nombre']
+    list_filter = ['activo', 'fecha_ingreso']
+    ordering = ['-fecha_ingreso']
+    list_per_page = 25
+
+    @admin.display(description='Antigüedad (años)')
+    def antiguedad_años(self, obj):
+        from datetime import date
+        if obj.fecha_ingreso:
+            dias = (date.today() - obj.fecha_ingreso).days
+            años = dias / 365
+            return f"{años:.1f} años"
+        return "N/A"
+
+@admin.register(HistorialPuesto)
+class HistorialPuestoAdmin(admin.ModelAdmin):
+    list_display = ['empleado', 'puesto', 'fecha_inicio', 'fecha_fin', 'esta_activo']
+    search_fields = ['empleado__nombre', 'puesto__nombre'] 
+    list_filter = ['puesto', 'fecha_inicio']
+    
+    fieldsets = (
+        ('Información del Empleado', {
+            'fields': ('empleado',)
+        }),
+        ('Información del Puesto', {
+            'fields': ('puesto',)
+        }),
+        ('Fechas', {
+            'fields': ('fecha_inicio', 'fecha_fin'),
+            'description': 'Si fecha_fin está vacía, el puesto está activo'
+        }),
+    )
+    ordering = ['-fecha_inicio']
+    list_per_page = 30
+
+    @admin.display(boolean=True, description='¿Activo?')
+    def esta_activo(self, obj):
+        return obj.fecha_fin is None

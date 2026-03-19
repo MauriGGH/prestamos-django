@@ -10,19 +10,20 @@ ENV PYTHONUNBUFFERED=1
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Instala dependencias del sistema necesarias para PostgreSQL
-RUN apt-get update && apt-get install -y \
-  gcc \
-  postgresql-client \
-  libpq-dev \
-  && rm -rf /var/lib/apt/lists/*
+# Instala dependencias del sistema forzando IPv4 para evitar cuelgues de red
+RUN apt-get -o Acquire::ForceIPv4=true update && \
+    apt-get -o Acquire::ForceIPv4=true install -y \
+    gcc \
+    postgresql-client \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copia el archivo de requisitos
 COPY requirements.txt /app/
 
 # Instala las dependencias de Python
 RUN pip install --upgrade pip && \
-  pip install -r requirements.txt
+    pip install -r requirements.txt
 
 # Copia el código del proyecto
 COPY . /app/
