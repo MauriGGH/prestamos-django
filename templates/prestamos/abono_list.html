@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Abonos — Préstamo #{{ prestamo.id }}{% endblock %}
+
+{% block content %}
+<div class="card">
+
+    <!-- Encabezado -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.8rem;">
+        <div>
+            <h1 style="margin: 0;">Historial de Abonos</h1>
+            <p style="margin: 0.3rem 0 0; color: var(--muted); font-size: 0.9rem;">
+                Préstamo #{{ prestamo.id }} — {{ prestamo.empleado.nombre }}
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            {% if prestamo.estado == 'ACTIVO' %}
+                <a class="btn btn-primary" href="{% url 'abono_crear' prestamo.id %}">+ Registrar Abono</a>
+            {% endif %}
+            <a class="btn btn-secondary" href="{% url 'prestamo_detail' prestamo.id %}">← Volver al préstamo</a>
+        </div>
+    </div>
+
+    <!-- Resumen del préstamo -->
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+
+        <div style="flex: 1; min-width: 160px; background: #f0f6f6; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem;">Monto Original</div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: var(--text);">${{ prestamo.monto|floatformat:2 }}</div>
+        </div>
+
+        <div style="flex: 1; min-width: 160px; background: #f0f6f6; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem;">Saldo Actual</div>
+            <div style="font-size: 1.25rem; font-weight: 700;
+                {% if prestamo.saldo_actual <= 0 %}color: #065f46;
+                {% else %}color: var(--primary);{% endif %}">
+                ${{ prestamo.saldo_actual|floatformat:2 }}
+            </div>
+        </div>
+
+        <div style="flex: 1; min-width: 160px; background: #f0f6f6; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem;">Abonos Registrados</div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: var(--text);">{{ abonos|length }}</div>
+        </div>
+
+        <div style="flex: 1; min-width: 160px; background: #f0f6f6; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem;">Estado</div>
+            <div style="margin-top: 0.2rem;">
+                <span style="padding: 0.25rem 0.75rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem;
+                    {% if prestamo.estado == 'ACTIVO' %}background-color: #cfe2ff; color: #084298;
+                    {% elif prestamo.estado == 'CONCLUIDO' %}background-color: #e2e3e5; color: #383d41;
+                    {% else %}background-color: #fff3cd; color: #664d03;{% endif %}">
+                    {{ prestamo.estado }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de abonos -->
+    {% if abonos %}
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 60px;">N°</th>
+                <th>Fecha</th>
+                <th style="text-align: right;">Capital</th>
+                <th style="text-align: right;">Interés</th>
+                <th style="text-align: right;">Total Cobrado</th>
+                <th style="text-align: right;">Saldo Restante</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for abono in abonos %}
+            <tr {% if forloop.last and prestamo.estado == 'CONCLUIDO' %}style="background: #f0fdf4;"{% endif %}>
+                <td>
+                    <span style="font-weight: 600; color: var(--primary);">#{{ abono.numero_abono }}</span>
+                </td>
+                <td>{{ abono.fecha|date:'d/m/Y' }}</td>
+                <td style="text-align: right;">${{ abono.monto_capital|floatformat:2 }}</td>
+                <td style="text-align: right;">${{ abono.monto_interes|floatformat:2 }}</td>
+                <td style="text-align: right; font-weight: 600;">${{ abono.monto_cobrado|floatformat:2 }}</td>
+                <td style="text-align: right;">
+                    {% if abono.saldo_actual <= 0 %}
+                        <span style="color: #065f46; font-weight: 700;">$0.00 ✓</span>
+                    {% else %}
+                        ${{ abono.saldo_actual|floatformat:2 }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 3rem 1rem; color: var(--muted);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
+        <p style="margin: 0; font-size: 1rem;">Este préstamo aún no tiene abonos registrados.</p>
+        {% if prestamo.estado == 'ACTIVO' %}
+        <a class="btn btn-primary" href="{% url 'abono_crear' prestamo.id %}" style="margin-top: 1rem; display: inline-block;">
+            Registrar primer abono
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

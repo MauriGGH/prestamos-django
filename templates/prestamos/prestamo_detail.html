@@ -7,6 +7,9 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.8rem; flex-wrap: wrap;">
         <h1>Préstamo #{{ prestamo.id }}</h1>
         <div style="display: flex; gap: 0.5rem;">
+            {% if prestamo.estado == 'ACTIVO' %}
+                <a class="btn btn-primary" href="{% url 'abono_crear' prestamo.id %}">+ Registrar Abono</a>
+            {% endif %}
             <a class="btn btn-secondary" href="{% url 'prestamo_update' prestamo.id %}">Editar</a>
             <a class="btn btn-danger" href="{% url 'prestamo_delete' prestamo.id %}">Eliminar</a>
             <a class="btn btn-default" href="{% url 'prestamo_list' %}">Volver</a>
@@ -106,7 +109,11 @@
                 </tr>
                 <tr>
                     <td><strong>Saldo Actual:</strong></td>
-                    <td>${{ prestamo.saldo_actual|floatformat:2 }}</td>
+                    <td>
+                        <span style="font-weight: 700; {% if prestamo.saldo_actual <= 0 %}color: #065f46;{% else %}color: var(--primary);{% endif %}">
+                            ${{ prestamo.saldo_actual|floatformat:2 }}
+                        </span>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -154,5 +161,86 @@
             </tbody>
         </table>
     </section>
+
+    <!-- ========== SECCIÓN ABONOS ========== -->
+    <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h2 style="margin: 0;">
+                Abonos
+                {% if total_abonos > 0 %}
+                    <span style="font-size: 0.85rem; font-weight: 400; color: var(--muted);">({{ total_abonos }} registrado{{ total_abonos|pluralize:"s" }})</span>
+                {% endif %}
+            </h2>
+            <div style="display: flex; gap: 0.5rem;">
+                {% if total_abonos > 0 %}
+                    <a class="btn btn-secondary" href="{% url 'abono_list' prestamo.id %}"
+                       style="font-size: 0.85rem; padding: 0.35rem 0.7rem;">
+                        Ver historial completo →
+                    </a>
+                {% endif %}
+                {% if prestamo.estado == 'ACTIVO' %}
+                    <a class="btn btn-primary" href="{% url 'abono_crear' prestamo.id %}"
+                       style="font-size: 0.85rem; padding: 0.35rem 0.7rem;">
+                        + Registrar Abono
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if prestamo.estado != 'ACTIVO' and total_abonos == 0 %}
+            <p style="color: var(--muted); font-style: italic; font-size: 0.92rem;">
+                {% if prestamo.estado == 'CONCLUIDO' %}
+                    Préstamo concluido sin abonos registrados.
+                {% else %}
+                    Los abonos solo se pueden registrar cuando el préstamo esté en estado <strong>ACTIVO</strong>.
+                {% endif %}
+            </p>
+        {% elif total_abonos == 0 %}
+            <div style="background: #f5f5f5; border-radius: 8px; padding: 1.2rem; text-align: center; color: var(--muted);">
+                <p style="margin: 0 0 0.8rem;">No hay abonos registrados aún.</p>
+                <a class="btn btn-primary" href="{% url 'abono_crear' prestamo.id %}">Registrar primer abono</a>
+            </div>
+        {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Fecha</th>
+                        <th style="text-align: right;">Capital</th>
+                        <th style="text-align: right;">Interés</th>
+                        <th style="text-align: right;">Total Cobrado</th>
+                        <th style="text-align: right;">Saldo Restante</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for abono in abonos_recientes %}
+                    <tr>
+                        <td><span style="font-weight: 600; color: var(--primary);">#{{ abono.numero_abono }}</span></td>
+                        <td>{{ abono.fecha|date:'d/m/Y' }}</td>
+                        <td style="text-align: right;">${{ abono.monto_capital|floatformat:2 }}</td>
+                        <td style="text-align: right;">${{ abono.monto_interes|floatformat:2 }}</td>
+                        <td style="text-align: right; font-weight: 600;">${{ abono.monto_cobrado|floatformat:2 }}</td>
+                        <td style="text-align: right;">
+                            {% if abono.saldo_actual <= 0 %}
+                                <span style="color: #065f46; font-weight: 700;">$0.00 ✓</span>
+                            {% else %}
+                                ${{ abono.saldo_actual|floatformat:2 }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if total_abonos > 5 %}
+            <div style="text-align: center; margin-top: 0.8rem;">
+                <a href="{% url 'abono_list' prestamo.id %}" style="color: var(--primary); font-size: 0.9rem; text-decoration: none;">
+                    Ver los {{ total_abonos }} abonos completos →
+                </a>
+            </div>
+            {% endif %}
+        {% endif %}
+    </section>
+
 </div>
 {% endblock %}
